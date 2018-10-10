@@ -1,5 +1,5 @@
 <% @users.each_with_index do |user, rank| %>
-  <%= user[:name] %> completed <%= user[:labs_completed] %> labs, <%= rank < 6 ? "woo" : "boo" %><br>
+  <%= user[:name] %> completed <%= user[:labs_completed] %> labs, <%= rank >= 6 ? "woo" : "boo" %><br>
 <% end %>
 
 <script type="text/javascript" src="https://www.gstatic.com/charts/loader.js"></script>

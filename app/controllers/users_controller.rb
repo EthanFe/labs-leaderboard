@@ -42,7 +42,7 @@ class UsersController < ApplicationController
 
     @users = []
     users.each do |user|
-      labs = get_labs_completed_for_user(agent, user, base_url)
+      labs = get_labs_completed_for_user(agent, user, base_url).to_i
       @users << {name: user, labs_completed: labs}
     end
     @users = @users.sort_by do |user|

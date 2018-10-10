@@ -6,6 +6,8 @@ class UsersController < ApplicationController
 
     email = ENV['LEARN_LOGIN_EMAIL']
     password = ENV['LEARN_LOGIN_PASSWORD']
+    puts email
+    puts password
 
     # Create a new mechanize object
     agent = Mechanize.new

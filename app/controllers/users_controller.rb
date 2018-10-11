@@ -38,6 +38,23 @@ class UsersController < ApplicationController
       "jordantredaniel"
     ]
 
+    @emoji_list = {
+      "kapham2": "doge",
+      "Richardojo86": "hotpocket",
+      "gwatson": "panda_face",
+      "nickluong": "crying_frog",
+      "chelsme": "lasagnacat",
+      "EthanFe": "monkey_face",
+      "V10LET": "christmas_tree",
+      "HeadyT0pper": "table_tennis_paddle_and_ball",
+      "NaebIis": "cat",
+      "mwilliamszoe": "fries",
+      "sparkbold-git": "metro",
+      "spraguesy": "the_plague",
+      "jordantredaniel": "jordan",
+      "morgvanny": "morgan-freeman",
+    }
+
     base_url = "https://learn.co/"
 
     @users = []
@@ -48,6 +65,7 @@ class UsersController < ApplicationController
     @users = @users.sort_by do |user|
       user[:labs_completed]
     end
+    @max_labs_completed = @users.last[:labs_completed]
     @users_json = @users.to_json
   end
 

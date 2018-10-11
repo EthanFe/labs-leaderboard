@@ -1,32 +1,30 @@
-<% @users.each_with_index do |user, rank| %>
-  <%= user[:name] %> completed <%= user[:labs_completed] %> labs, <%= rank >= 6 ? "woo" : "boo" %><br>
-<% end %>
-
 <script type="text/javascript" src="https://www.gstatic.com/charts/loader.js"></script>
 
 <%= javascript_tag do -%>
-  google.charts.load('current', {'packages':['bar']});
+  google.charts.load('current', {'packages':['corechart', 'bar']});
   google.charts.setOnLoadCallback(drawChart);
 
-  const dataTable = [['Boolean Icee', 'Labs Completed']]
+  const dataTable = [['Boolean Icee', 'Labs Completed', {'role': 'style'}]]
 
   for (const user of JSON.parse('<%= @users_json.html_safe -%>')) {
-    dataTable.push([user.name, user.labs_completed])
+    let userData = [user.name, user.labs_completed, (user.labs_completed == <%= @max_labs_completed %>) ? "gold" : "blue"]
+    dataTable.push(userData)
   }
 
   function drawChart() {
-    var chartData = google.visualization.arrayToDataTable(dataTable);
+    var data = google.visualization.arrayToDataTable(dataTable);
 
     var options = {
-      chart: {
-        title: 'Labs Completed',
-        subtitle: 'cookies are tasty',
-      }
-    };
+        title: 'Labs Leaderboard',
+        hAxis: {
+          title: 'Boolean Icee',
+        }
+      };
 
-    var chart = new google.charts.Bar(document.getElementById('chart_div'));
-
-    chart.draw(chartData, google.charts.Bar.convertOptions(options));
+    // var chart = new google.charts.Bar(document.getElementById('chart_div'));
+    // chart.draw(chartData, google.charts.Bar.convertOptions(options));
+    var chart = new google.visualization.ColumnChart(document.getElementById('chart_div'));
+    chart.draw(data, options);
   }
 <% end -%>
 

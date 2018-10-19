@@ -20,9 +20,10 @@
     "jordantredaniel"
   ]
 
+  const domain = getDomain(document.URL)
   userData = []
   for (const user of users) {
-    fetch(`${document.URL}/${user}`)
+    fetch(`http://${domain}/users/${user}`)
     .then(response => response.json())
     .then(addToUserData)
   }
@@ -92,6 +93,24 @@
 
     var chart = new google.visualization.ColumnChart(document.getElementById('chart_div'));
     chart.draw(data, options);
+  }
+  
+  function getDomain(url, subdomain) {
+    subdomain = subdomain || false;
+
+    url = url.replace(/(https?:\/\/)?(www.)?/i, '');
+
+    if (!subdomain) {
+        url = url.split('.');
+
+        url = url.slice(url.length - 2).join('.');
+    }
+
+    if (url.indexOf('/') !== -1) {
+        return url.split('/')[0];
+    }
+
+    return url;
   }
 <% end -%>
 

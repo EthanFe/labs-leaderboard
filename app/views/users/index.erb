@@ -23,7 +23,7 @@
   const domain = getDomain(document.URL)
   userData = []
   for (const user of users) {
-    fetch(`http://${domain}/users/${user}`)
+    fetch(`https://${domain}/users/${user}`)
     .then(response => response.json())
     .then(addToUserData)
   }

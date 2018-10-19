@@ -2,6 +2,7 @@
 require 'open-uri'
 
 class UsersController < ApplicationController
+	skip_before_action :verify_authenticity_token
   def index
     
   end
@@ -34,5 +35,13 @@ class UsersController < ApplicationController
 
     labs = get_labs_completed_for_user(agent, params[:name], base_url).to_i
     render json: {name: params[:name], labs: labs}
+  end
+
+  def save_data
+    snapshot = Snapshot.create
+    params[:users].each do |username, labs|
+      user = User.find_or_create_by(name: username)
+      user_snapshot = snapshot.user_snapshots.create(user_id: user.id, labs: labs)
+    end
   end
 end

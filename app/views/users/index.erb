@@ -1,6 +1,9 @@
 <script type="text/javascript" src="https://www.gstatic.com/charts/loader.js"></script>
 
 <%= javascript_tag do -%>
+  // this is good code.
+  const base_url = "https://labs-leaderboard.herokuapp.com/"
+  // const base_url = "http://localhost:3000/"
   let chartIsReady = false
 
   const users = [
@@ -22,8 +25,7 @@
 
   userData = []
   for (const user of users) {
-    // this is good code.
-    fetch(`https://labs-leaderboard.herokuapp.com/users/${user}`)
+    fetch(`${base_url}users/${user}`)
     .then(response => response.json())
     .then(addToUserData)
   }
@@ -50,6 +52,9 @@
       const loadingText = document.getElementById("loading-text")
       loadingText.classList.add("invisible")
       loadingText.textContent = "Done!"
+
+      // slice to exclude the chart drawing table header stuff
+      submitDataToDatabase(dataTable.slice(1, dataTable.length))
     }
   }
 
@@ -94,23 +99,23 @@
     var chart = new google.visualization.ColumnChart(document.getElementById('chart_div'));
     chart.draw(data, options);
   }
-  
-  function getDomain(url, subdomain) {
-    subdomain = subdomain || false;
 
-    url = url.replace(/(https?:\/\/)?(www.)?/i, '');
+  function submitDataToDatabase(dataTable) {
+    let url = base_url + "saveData"
 
-    if (!subdomain) {
-        url = url.split('.');
-
-        url = url.slice(url.length - 2).join('.');
+    let data = {}
+    for (const user of dataTable) {
+      data[user[0]] = user[1]
     }
+    console.log(data)
 
-    if (url.indexOf('/') !== -1) {
-        return url.split('/')[0];
-    }
-
-    return url;
+    fetch(url, {
+      method: 'POST',
+      body: JSON.stringify({users: data}),
+      headers:{
+        'Content-Type': 'application/json'
+      }
+    })
   }
 <% end -%>
 

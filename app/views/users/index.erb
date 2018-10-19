@@ -1,28 +1,95 @@
 <script type="text/javascript" src="https://www.gstatic.com/charts/loader.js"></script>
 
 <%= javascript_tag do -%>
-  google.charts.load('current', {'packages':['corechart', 'bar']});
-  google.charts.setOnLoadCallback(drawChart);
+  let chartIsReady = false
 
-  const dataTable = [['Boolean Icee', 'Labs Completed', {'role': 'style'}]]
+  const users = [
+    "kapham2",
+    "Richardojo86",
+    "nickluong",
+    "gwatson86",
+    "spraguesy",
+    "HeadyT0pper",
+    "V10LET",
+    "mwilliamszoe",
+    "NaebIis",
+    "sparkbold-git",
+    "chelsme",
+    "EthanFe",
+    "morgvanny",
+    "jordantredaniel"
+  ]
 
-  for (const user of JSON.parse('<%= @users_json.html_safe -%>')) {
-    let userData = [user.name, user.labs_completed, (user.labs_completed == <%= @max_labs_completed %>) ? "gold" : "blue"]
-    dataTable.push(userData)
+  userData = []
+  for (const user of users) {
+    fetch(`${document.URL}/${user}`)
+    .then(response => response.json())
+    .then(addToUserData)
   }
 
-  function drawChart() {
+  function addToUserData(data) {
+    userData.push(data)
+    userData.sort(function(user1, user2) {
+      return user1.labs - user2.labs
+    })
+    renderChart()
+  }
+
+  function renderChart() {
+    const dataTable = [['Boolean Icee', 'Labs Completed', {'role': 'style'}]]
+
+    maxLabs = getMaxLabs()
+    for (const user of userData) {
+      let labsInfo = [user.name, user.labs, (finishedLoading() && (user.labs == maxLabs)) ? "gold" : "blue"]
+      dataTable.push(labsInfo)
+    }
+    
+    drawChart(dataTable)
+    if (finishedLoading()) {
+      const loadingText = document.getElementById("loading-text")
+      loadingText.classList.add("invisible")
+      loadingText.textContent = "Done!"
+    }
+  }
+
+  function finishedLoading() {
+    return userData.length === users.length
+  }
+
+  function getMaxLabs() {
+    max = 0
+    for (const user of userData) {
+      if (max < user.labs)
+        max = user.labs
+    }
+    return max
+  }
+
+  function chartReady() {
+    chartIsReady = true
+  }
+
+  google.charts.load('current', {'packages':['corechart', 'bar']});
+  google.charts.setOnLoadCallback(chartReady);
+
+  function drawChart(dataTable) {
+    if (!chartIsReady)
+      return
+    
     var data = google.visualization.arrayToDataTable(dataTable);
 
     var options = {
-        title: 'Labs Leaderboard',
-        hAxis: {
-          title: 'Boolean Icee',
-        }
-      };
+      title: 'Labs Leaderboard',
+      hAxis: {
+        title: 'Boolean Icee',
+      },
+      animation: {
+        "startup": true,
+        "duration": 500,
+        "easing": 'out'
+      }
+    };
 
-    // var chart = new google.charts.Bar(document.getElementById('chart_div'));
-    // chart.draw(chartData, google.charts.Bar.convertOptions(options));
     var chart = new google.visualization.ColumnChart(document.getElementById('chart_div'));
     chart.draw(data, options);
   }
@@ -32,3 +99,5 @@
 
 
 <div id="chart_div" width="800" height="600"></div>
+
+<h2 id="loading-text">Loading...</h3>

@@ -26,7 +26,7 @@ class User < ApplicationRecord
     final_snapshots = []
     sorted_snapshots = (Snapshot.all.sort_by { |snapshot| snapshot.created_at}).reverse
     sorted_snapshots.each do |snapshot|
-      date = snapshot.created_at.strftime("%Y%m%d%H")
+      date = snapshot.created_at.strftime("%Y%m%d")
       # date = snapshot.created_at
       if !dates_included[date]
         dates_included[date] = true

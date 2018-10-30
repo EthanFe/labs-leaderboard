@@ -14,7 +14,7 @@ class User < ApplicationRecord
           user = {username: username, data: []}
           users << user
         end
-        date = snapshot.created_at
+        date = snapshot.created_at.strftime("%F")
         user[:data] << {date: date, score: user_snapshot.labs}
       end
     end

@@ -5,5 +5,5 @@ Rails.application.routes.draw do
   get 'users/:name', to: "users#get_user_data"
 
   post 'saveData', to: "users#save_data"
-  # For details on the DSL available within this file, see http://guides.rubyonrails.org/routing.html
+  get 'getData', to: "users#get_data"
 end

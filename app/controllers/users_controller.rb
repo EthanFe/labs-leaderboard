@@ -44,4 +44,8 @@ class UsersController < ApplicationController
       user_snapshot = snapshot.user_snapshots.create(user_id: user.id, labs: labs)
     end
   end
+
+  def get_data
+    render json: User.get_data_per_day
+  end
 end

@@ -38,11 +38,15 @@ class UsersController < ApplicationController
   end
 
   def save_data
+    last_snapshot = (Snapshot.all.sort_by { |snapshot| snapshot.created_at}).last
+    
     snapshot = Snapshot.create
     params[:users].each do |username, labs|
       user = User.find_or_create_by(name: username)
       user_snapshot = snapshot.user_snapshots.create(user_id: user.id, labs: labs)
     end
+
+    Snapshot.check_duplicate_snapshot(last_snapshot, snapshot)
   end
 
   def get_data

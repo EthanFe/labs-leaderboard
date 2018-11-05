@@ -59,3 +59,7 @@ gem "pry", "~> 0.11.3"
 gem "mechanize", "~> 2.7"
 
 gem "rack-cors", "~> 1.0"
+
+gem "rest-client", "~> 2.0"
+
+gem "json", "~> 2.1"
